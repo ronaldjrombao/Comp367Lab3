@@ -26,14 +26,14 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    dockerImage = docker.build("ronaldjrombao/comp367lab3:latest")
+                    dockerImage = docker.build("${DOCKER_IMAGE}")
                 }
             }
         }
         stage('Docker Build and Push') {
             steps {
                 script {
-                    withDockerRegistry(credentialsId: 'DockerHubCreds', url: 'https://docker.io') {
+                    withDockerRegistry(credentialsId: 'DockerHubCreds') {
                         dockerImage.push()
                     }
                 }
