@@ -8,7 +8,6 @@ pipeline {
     environment {
         GIT_REPO = 'git@github.com:ronaldjrombao/Comp367Lab3.git'
         BRANCH = 'master'
-        DOCKERHUB_CREDENTIALS = credentials('DockerHubCreds')
         DOCKER_IMAGE = 'ronaldjrombao/comp367lab3:latest'
     }
 
@@ -24,6 +23,17 @@ pipeline {
             steps {
                 echo 'Building the project...'
                 sh 'mvn clean package -DskipTests'
+            }
+        }
+
+        stage('Docker Build and Push') {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'DockerHubCreds', url: 'https://hub.docker.com/repositories/ronaldjrombao') {
+                        dockerImage = docker.build("ronaldjrombao/comp367lab3:latest")
+                        dockerImage.push()
+                    }
+                }
             }
         }
     }
