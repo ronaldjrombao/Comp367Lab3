@@ -9,7 +9,7 @@ pipeline {
         GIT_REPO = 'git@github.com:ronaldjrombao/Comp367Lab3.git'
         BRANCH = 'master'
         DOCKERHUB_CREDENTIALS = credentials('DockerHubCreds')
-        DOCKER_IMAGE = 'comp367lab3:latest'
+        DOCKER_IMAGE = 'ronaldjrombao/comp367lab3:latest'
     }
 
     stages {
@@ -20,11 +20,21 @@ pipeline {
             }
         }
 
-        stage('Build Image') {
+        stage('Docker Login') {
             steps {
-                script {
-                    dockerImage = docker.build("comp367lab3:latest")
-                }
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                sh 'docker build -t $DOCKER_IMAGE .'
+            }
+        }
+
+        stage('Docker Push') {
+            steps {
+                sh 'docker push $DOCKER_IMAGE'
             }
         }
     }
