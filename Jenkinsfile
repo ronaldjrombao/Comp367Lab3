@@ -1,5 +1,9 @@
 pipeline {
-    agent { dockerfile true }
+    agent any
+
+    tools {
+        maven "M3"
+    }
 
     environment {
         GIT_REPO = 'git@github.com:ronaldjrombao/Comp367Lab3.git'
@@ -15,16 +19,11 @@ pipeline {
                 git branch: "${BRANCH}", url: "${GIT_REPO}", credentialsId: 'GithubSSh'
             }
         }
-        stage('Docker Build') {
+
+        stage('Build Package') {
             steps {
-                script {
-                    dockerImage = docker.build("ronaldjrombao/comp367lab3:latest")
-                }
-            }
-        }
-       stage('Test Image') {
-            steps {
-                sh 'docker run --rm ronaldjrombao/comp367lab3:latest ./run-tests.sh'
+                echo 'Building the project...'
+                sh 'mvn clean package -DskipTests'
             }
         }
     }
