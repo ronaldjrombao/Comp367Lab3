@@ -27,7 +27,7 @@ pipeline {
             steps {
                 script {
                     withDockerRegistry(credentialsId: 'DockerHubCreds', url: 'https://docker.io') {
-                        dockerImage = docker.build(${DOCKER_IMAGE})
+                        dockerImage = docker.build('ronaldjrombao/comp367lab3:latest')
                         dockerImage.push()
                     }
                 }
