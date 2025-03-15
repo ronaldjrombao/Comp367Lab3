@@ -8,6 +8,8 @@ pipeline {
     environment {
         GIT_REPO = 'git@github.com:ronaldjrombao/Comp367Lab3.git'
         BRANCH = 'master'
+        DOCKERHUB_CREDENTIALS = credentials('DockerHubCreds')
+        DOCKER_IMAGE = 'ronaldjrombao/comp367lab3'
     }
 
     stages {
@@ -18,24 +20,21 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
+        stage('Docker Login') {
             steps {
-                echo 'Running tests...'
-                sh 'mvn test'
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
             }
         }
 
-        stage('Build Package') {
+        stage('Docker Build') {
             steps {
-                echo 'Building the project...'
-                sh 'mvn clean package'
+                sh 'docker build -t $DOCKER_IMAGE .'
             }
         }
 
-        stage('Archive Artifact') {
+        stage('Docker Push') {
             steps {
-                echo 'Archiving the built artifact...'
-                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+                sh 'docker push $DOCKER_IMAGE'
             }
         }
     }
