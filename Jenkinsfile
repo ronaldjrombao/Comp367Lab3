@@ -30,7 +30,7 @@ pipeline {
             steps {
                 script {
                     withDockerRegistry(credentialsId: 'DockerHubCreds', url: 'https://docker.io/ronaldjrombao/comp367lab3') {
-                        dockerImage = docker.build("ronaldjrombao/comp367lab3:latest")
+                        dockerImage = docker.build("api:latest")
                         dockerImage.push()
                     }
                 }
