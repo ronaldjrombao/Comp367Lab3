@@ -1,10 +1,6 @@
 pipeline {
     agent { dockerfile true }
 
-    tools {
-        maven "M3"
-    }
-
     environment {
         GIT_REPO = 'git@github.com:ronaldjrombao/Comp367Lab3.git'
         BRANCH = 'master'
@@ -19,22 +15,16 @@ pipeline {
                 git branch: "${BRANCH}", url: "${GIT_REPO}", credentialsId: 'GithubSSh'
             }
         }
-
-        stage('Docker Login') {
-            steps {
-                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-            }
-        }
-
         stage('Docker Build') {
             steps {
-                sh 'docker build -t $DOCKER_IMAGE .'
+                script {
+                    dockerImage = docker.build("ronaldjrombao/comp367lab3:latest")
+                }
             }
         }
-
-        stage('Docker Push') {
+       stage('Test Image') {
             steps {
-                sh 'docker push $DOCKER_IMAGE'
+                sh 'docker run --rm ronaldjrombao/comp367lab3:latest ./run-tests.sh'
             }
         }
     }
