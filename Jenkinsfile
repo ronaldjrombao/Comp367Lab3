@@ -20,12 +20,13 @@ pipeline {
             }
         }
 
-        stage('Docker Build') {
+        stage('Build Image') {
             steps {
-                sh 'docker build -t $DOCKER_IMAGE .'
+                script {
+                    dockerImage = docker.build("comp367lab3:latest")
+                }
             }
         }
-
     }
 
     post {
