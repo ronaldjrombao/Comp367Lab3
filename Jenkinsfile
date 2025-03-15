@@ -9,7 +9,7 @@ pipeline {
         GIT_REPO = 'git@github.com:ronaldjrombao/Comp367Lab3.git'
         BRANCH = 'master'
         DOCKERHUB_CREDENTIALS = credentials('DockerHubCreds')
-        DOCKER_IMAGE = 'ronaldjrombao/comp367lab3'
+        DOCKER_IMAGE = 'comp367lab3:latest'
     }
 
     stages {
