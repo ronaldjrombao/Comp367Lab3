@@ -26,8 +26,8 @@ pipeline {
         stage('Docker Build and Push') {
             steps {
                 script {
-                    withDockerRegistry(credentialsId: 'DockerHubCreds', url: 'https://docker.io/ronaldjrombao/comp367lab3') {
-                        dockerImage = docker.build("https://docker.io/ronaldjrombao/comp367lab3")
+                    withDockerRegistry(credentialsId: 'DockerHubCreds', url: 'https://docker.io') {
+                        dockerImage = docker.build(${DOCKER_IMAGE})
                         dockerImage.push()
                     }
                 }
