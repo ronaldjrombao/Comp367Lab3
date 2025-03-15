@@ -23,11 +23,17 @@ pipeline {
                 sh 'mvn clean package -DskipTests'
             }
         }
+        stage('Build') {
+            steps {
+                script {
+                    dockerImage = docker.build("ronaldjrombao/comp367lab3:latest")
+                }
+            }
+        }
         stage('Docker Build and Push') {
             steps {
                 script {
                     withDockerRegistry(credentialsId: 'DockerHubCreds', url: 'https://docker.io') {
-                        dockerImage = docker.build('ronaldjrombao/comp367lab3:latest')
                         dockerImage.push()
                     }
                 }
